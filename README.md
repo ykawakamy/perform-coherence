@@ -40,5 +40,5 @@ usage: usage : ./perform.sh (caseNo) (producerCount) (comsumerCount) [same|each]
 
 producer/comsumerを指定したプロセス数起動します。Put/Listenのキーは`same`指定時、1固定となり、`each`指定時、1～Producerの数の範囲で割り振られます。
 
-
+起動したプロセスはプロセスグループのkill(`kill -- -(pgid)`)でまとめて停止することができるはずです。
 
