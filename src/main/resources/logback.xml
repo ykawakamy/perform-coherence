@@ -9,7 +9,7 @@
         </layout>
     </appender>
 
-    <logger name="ccs.coherence" level="INFO"/>
+    <logger name="ccs" level="INFO"/>
 
     <root level="warn">
         <appender-ref ref="CONSOLE"/>

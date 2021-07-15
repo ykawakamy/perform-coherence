@@ -1,36 +1,24 @@
 package ccs.coherence.keyperform;
 
-import java.util.Objects;
-import java.util.concurrent.atomic.AtomicInteger;
-
 import com.tangosol.util.MapEvent;
 import com.tangosol.util.MapListener;
 
+import ccs.perform.util.SequencialPerformCounter;
+
 public class ModifiyCountListener implements MapListener<String, Integer> {
 
-    AtomicInteger seq = new AtomicInteger();
-    AtomicInteger err = new AtomicInteger();
-
-    AtomicInteger perform = new AtomicInteger();
+    SequencialPerformCounter data = new SequencialPerformCounter();
 
     @Override
     public void entryInserted(MapEvent<String, Integer> evt) {
-        int expected = seq.getAndIncrement();
-        if( !Objects.equals(expected, evt.getNewValue())  ) {
-            err.getAndIncrement();
-            seq.set(evt.getNewValue()+1);
-        }
-        perform.getAndIncrement();
+        Integer actual = evt.getNewValue();
+        data.perform(actual);
     }
 
     @Override
     public void entryUpdated(MapEvent<String, Integer> evt) {
-        int expected = seq.getAndIncrement();
-        if( !Objects.equals(expected, evt.getNewValue())  ) {
-            err.getAndIncrement();
-            seq.set(evt.getNewValue()+1);
-        }
-        perform.getAndIncrement();
+        Integer actual = evt.getNewValue();
+        data.perform(actual);
     }
 
     @Override
@@ -39,17 +27,15 @@ public class ModifiyCountListener implements MapListener<String, Integer> {
     }
 
     public int get() {
-        return seq.get();
+        return data.getSeq();
     }
 
     public int getErr() {
-        return err.get();
+        return data.getErr();
     }
 
     public int retrievePerform() {
-        int v = perform.getAndSet(0);
-        err.set(0);
-        return v;
+        return data.retrievePerform();
     }
 
 }

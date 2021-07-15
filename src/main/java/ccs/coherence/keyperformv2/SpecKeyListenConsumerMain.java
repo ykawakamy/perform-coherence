@@ -1,0 +1,47 @@
+package ccs.coherence.keyperformv2;
+
+import java.util.concurrent.TimeUnit;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.tangosol.net.CacheFactory;
+import com.tangosol.net.NamedMap;
+
+import ccs.perform.util.PerformHistogram;
+import ccs.perform.util.PerformSnapshot;
+
+public class SpecKeyListenConsumerMain {
+    private static final Logger log = LoggerFactory.getLogger(SpecKeyListenConsumerMain.class);
+    // ----- static methods -------------------------------------------------
+
+    public static void main(String[] asArgs) throws InterruptedException {
+        NamedMap<String, LatencyMeasurePing> map = CacheFactory.getCache("welcomes");
+        ModifiyCountListener listener = new ModifiyCountListener();
+
+        String key = System.getProperty("ccs.perform.key", "defaultkey");
+        long loop_ns = 5_000_000_000L; // ns = 5s
+        int iter = Integer.valueOf(System.getProperty("ccs.perform.iterate", "20"));
+
+        map.addMapListener(listener, key, false);
+
+        PerformHistogram hist = new PerformHistogram();
+        hist.addShutdownHook();
+
+        try {
+            for( int i=0 ; i != iter ; i++ ) {
+                long st = System.nanoTime();
+                long et = 0;
+                TimeUnit.NANOSECONDS.sleep(loop_ns);
+                et = System.nanoTime();
+
+                PerformSnapshot snap = listener.data.reset();
+                log.info("{}: {} op, {} errors, {} ns/op, latency: {} ms/op", key, snap.getPerform(), snap.getErr(), snap.getElapsedPerOperation(et-st), snap.getLatencyPerOperation() );
+            }
+        }catch(Throwable th) {
+            log.error("occ exception.", th);
+        }finally {
+            map.close();
+        }
+    }
+}

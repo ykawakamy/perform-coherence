@@ -7,10 +7,10 @@ public class ConsBusyGetMain {
     // ----- static methods -------------------------------------------------
 
     public static void main(String[] asArgs) {
-        NamedMap<String, String> map = CacheFactory.getCache("welcomes");
+        NamedMap<String, Integer> map = CacheFactory.getCache("welcomes");
 
         long loop_ns = 5_000_000_000L; // ns = 5s
-        int iter = 20;
+        int iter = 200;
 
         for( int i=0 ; i< iter ; i++ ) {
             long st = System.nanoTime();

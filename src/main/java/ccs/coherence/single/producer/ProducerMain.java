@@ -10,7 +10,7 @@ public class ProducerMain {
         NamedMap<String, Integer> map = CacheFactory.getCache("welcomes");
 
         long loop_ns = 5_000_000_000L; // ns = 5s
-        int iter = 5;
+        int iter = 100;
 
         int totalCnt = 0;
         for (int i = 0; i < iter; i++) {
