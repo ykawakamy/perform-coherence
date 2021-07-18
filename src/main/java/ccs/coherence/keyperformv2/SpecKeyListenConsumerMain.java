@@ -35,8 +35,8 @@ public class SpecKeyListenConsumerMain {
                 TimeUnit.NANOSECONDS.sleep(loop_ns);
                 et = System.nanoTime();
 
-                PerformSnapshot snap = listener.data.reset();
-                log.info("{}: {} op, {} errors, {} ns/op, latency: {} ms/op", key, snap.getPerform(), snap.getErr(), snap.getElapsedPerOperation(et-st), snap.getLatencyPerOperation() );
+                PerformSnapshot snap = listener.reset();
+                snap.print(log, et-st);
             }
         }catch(Throwable th) {
             log.error("occ exception.", th);

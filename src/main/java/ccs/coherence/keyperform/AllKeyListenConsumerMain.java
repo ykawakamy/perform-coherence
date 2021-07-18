@@ -8,6 +8,8 @@ import org.slf4j.LoggerFactory;
 import com.tangosol.net.CacheFactory;
 import com.tangosol.net.NamedMap;
 
+import ccs.perform.util.PerformSnapshot;
+
 public class AllKeyListenConsumerMain {
     private static final Logger log = LoggerFactory.getLogger(AllKeyListenConsumerMain.class);
     // ----- static methods -------------------------------------------------
@@ -29,8 +31,8 @@ public class AllKeyListenConsumerMain {
                 TimeUnit.NANOSECONDS.sleep(loop_ns);
                 et = System.nanoTime();
 
-                int count = listener.retrievePerform();
-                log.info("{}: {} op, {} errors, {} ns/op", key, count, listener.getErr(), (double)(et-st)/count );
+                PerformSnapshot count = listener.reset();
+                count.print(log, et-st);
             }
         }catch(Throwable th) {
             log.error("occ exception.", th);

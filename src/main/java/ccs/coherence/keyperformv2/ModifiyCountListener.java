@@ -3,6 +3,7 @@ package ccs.coherence.keyperformv2;
 import com.tangosol.util.MapEvent;
 import com.tangosol.util.MapListener;
 
+import ccs.perform.util.PerformSnapshot;
 import ccs.perform.util.SequencialPerformCounter;
 
 public class ModifiyCountListener implements MapListener<String, LatencyMeasurePing> {
@@ -31,16 +32,8 @@ public class ModifiyCountListener implements MapListener<String, LatencyMeasureP
 
     }
 
-    public int get() {
-        return data.getSeq();
-    }
-
-    public int getErr() {
-        return data.getErr();
-    }
-
-    public int retrievePerform() {
-        return data.retrievePerform();
+    public PerformSnapshot reset() {
+        return data.reset();
     }
 
 }
